@@ -48,6 +48,7 @@ fun count_some_var (some_string, p) =
 				     )
 				   | _ => 0) p
 
+(*
 fun check_pat pat = 
     let fun helper1 patches = 
     (case patches of
@@ -70,7 +71,19 @@ fun check_pat pat =
 			then false
 			else true
     end
+*)
 
+fun check_pat pat =
+    let fun helper1 patches =
+	    (case patches of
+		 ConstructorP (_,p) => helper1 p
+	       | Variable x => [Variable x]
+	       | TupleP ps => List.foldl (fn (y, acc) => acc @ helper1 y) [] ps
+	       | _ => [])
+	     in
+		 helper1 pat
+	     end
+					
 fun match (v, p) = 
     case p of
 	Wildcard => SOME []
