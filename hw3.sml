@@ -80,9 +80,15 @@ fun check_pat pat =
 	       | Variable x => [Variable x]
 	       | TupleP ps => List.foldl (fn (y, acc) => acc @ helper1 y) [] ps
 	       | _ => [])
-	     in
-		 helper1 pat
-	     end
+	fun helper2 [] = true
+	  | helper2 (x::xs) = (List.exists (fn y => x <> y) xs)
+    in
+	helper2 (helper1 pat)
+    end
+(*
+fun helper2 [] = true
+  | helper2 [x] = false
+  | helper2 (x::xs) = *)
 					
 fun match (v, p) = 
     case p of
